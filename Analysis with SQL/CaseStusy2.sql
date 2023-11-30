@@ -1,6 +1,4 @@
-#!/bin/bash
 
-echo "Welcome to CodeRunner!"
 -- The data date range is 1 month, from 2016–04–12 to 2015–05–12 
 SELECT MIN(ActivityDate) AS StartDate, MAX(ActivityDate) AS EndDate 
 FROM `bellabeat-case-study-406709.Bellabeat.dailyActivity` ;
