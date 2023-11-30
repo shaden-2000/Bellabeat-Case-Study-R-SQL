@@ -45,11 +45,10 @@ HAVING COUNT(*) > 1;
 -- find any duplicate 
 WITH daily_sleep_clean 
 AS (
-	SELECT *,
-		ROW_NUMBER() OVER (PARTITION BY Id
-		) AS DuplicateCount
-		FROM `bellabeat-case-study-406709.Bellabeat.sleepDay` )
-
+     SELECT *,
+	ROW_NUMBER() OVER (PARTITION BY Id
+	) AS DuplicateCount
+	FROM `bellabeat-case-study-406709.Bellabeat.sleepDay` )
 SELECT * 
 FROM daily_sleep_clean
 WHERE DuplicateCount = 1;
@@ -59,23 +58,22 @@ WHERE DuplicateCount = 1;
 
 
 -- create Minutes Till Sleep and Total Hours a sleep columns
-SELECT  *, (ROUND(TotalMinutesAsleep/60,1)) AS TotalHoursAsleep ,(TotalTimeInBed - TotalMinutesAsleep) AS MinutesTillSleep
+SELECT  *, (ROUND(TotalMinutesAsleep/60,1)) AS TotalHoursAsleep ,
+	(TotalTimeInBed - TotalMinutesAsleep) AS MinutesTillSleep
 FROM `bellabeat-case-study-406709.Bellabeat.daily_sleep_clean`;
 
 -- create Sedentary Hours and TotalActive Hours columns to observe the relationship between them and how do they affect each other
-SELECT
-	Id, ActivityDate, TotalSteps, TotalDistance, ActivityDate,
+SELECT  Id, ActivityDate, TotalSteps, TotalDistance, ActivityDate,
 	(ROUND(SedentaryMinutes/60,1)) AS SedentaryHours,
 	(ROUND((VeryActiveMinutes + FairlyActiveMinutes + LightlyActiveMinutes)/60,1)) AS TotalActiveHours, 
 	Calories
 FROM `bellabeat-case-study-406709.Bellabeat.dailyActivity`
-WHERE
-	(VeryActiveMinutes + FairlyActiveMinutes + LightlyActiveMinutes) > 0 AND Calories > 0;
+WHERE(VeryActiveMinutes + FairlyActiveMinutes + LightlyActiveMinutes) > 0 
+AND Calories > 0;
 	
 -- join daily_activity and daily_sleep_clean that has been transformed
 
-SELECT 
-	activity.Id,
+SELECT  activity.Id,
 	activity.ActivityDate, 
 	sleep.SleepDay, 
 	activity.TotalSteps, 
@@ -90,13 +88,12 @@ ORDER BY activity.TotalActiveHours DESC;
 
 
 -- BMI Categories
-SELECT
-	* EXCEPT(Fat,WeightKg,LogId,IsManualReport),
+SELECT * EXCEPT(Fat,WeightKg,LogId,IsManualReport),
 	CASE
-		WHEN BMI < 18.5 THEN "Underweight"
-		WHEN BMI < 25.0 THEN "Healthy"
-		WHEN BMI < 30.0 THEN "Overweight"
-		ELSE "Obese" END AS BMICategories
+	 WHEN BMI < 18.5 THEN "Underweight"
+	 WHEN BMI < 25.0 THEN "Healthy"
+	 WHEN BMI < 30.0 THEN "Overweight"
+	 ELSE "Obese" END AS BMICategories
 FROM `bellabeat-case-study-406709.Bellabeat.weightLogInfo`
 WHERE BMI > 0;
 
